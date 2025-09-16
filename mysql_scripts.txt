@@ -1,0 +1,112 @@
+//New Database
+mysql> create database game_store_app;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use game_store_app;
+Database changed
+
+
+
+// creating publishers table
+mysql> create table publishers (pub_id int primary key auto_increment, pub_name varchar(100) not null, pub_country varchar(100) not null);
+Query OK, 0 rows affected (0.04 sec)
+
+// populating the table using publisher.csv
+mysql> load data local infile './datasets/publishers.csv' into table publishers fields terminated by ',' lines terminated by '\r\n' (pub_name,pub_country);
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+// creating developers table
+mysql> create table developers (dev_id int primary key auto_increment, dev_name varchar(100) not null,
+Query OK, 0 rows affected (0.04 sec)
+
+//populating the table using developers.csv
+mysql> load data local infile './datasets/developers.csv' into table developers fields terminated by ',' lines terminated by '\r\n' (dev_name,dev_country);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+// creating platforms table
+mysql> create table platforms (plat_id int primary key auto_increment, plat_name varchar(100) not null, manufacturer varchar(100) not null);
+Query OK, 0 rows affected (0.04 sec)
+
+//populating platforms table using platforms.csv
+mysql> load data local infile './datasets/platforms.csv' into table platforms fields terminated by ',' lines terminated by '\r\n' (plat_name,manufacturer);
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+//creating games table 
+mysql> create table games (game_id int primary key auto_increment, game_name varchar(100) not null, ESRB_rating varchar (20) not null, genre varchar(30) not null, release_date date not null);
+Query OK, 0 rows affected (0.02 sec)
+
+//adding index
+mysql> create index game_id_index on games (game_id);
+
+//populating games table using games.csv
+mysql> load data local infile './datasets/games.csv' into table games fields terminated by ',' lines terminated by '\r\n' (game_name,ESRB_rating, genre, release_date);       Query OK, 6 rows affected (0.01 sec)
+Records: 6  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+//creating stores table
+mysql> create table stores (store_id int primary key auto_increment, location varchar(100) not null);
+Query OK, 0 rows affected (0.02 sec)
+
+//populating stores table using stores.csv
+mysql> load data local infile './datasets/stores.csv' into table stores fields terminated by ',' lines terminated by '\r\n' (location);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+
+//creating production table
+mysql> create table production (prod_id int primary key auto_increment, game_id int not null, dev_id int not null, pub_id int not null);
+Query OK, 0 rows affected (0.03 sec)
+
+//populating production table usisng production.csv
+mysql> load data local infile './datasets/production.csv' into table production fields terminated by ',' lines terminated by '\r\n' (game_id,dev_id,pub_id);
+Query OK, 8 rows affected (0.00 sec)
+Records: 8  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+//creating versions table
+mysql> create table versions (ver_id int primary key auto_increment, game_id int not null, plat_id int not null);
+Query OK, 0 rows affected (0.02 sec)
+
+//adding index
+mysql> create index ver_id_index on versions (ver_id);
+
+//populating versions table using versions.csv
+mysql> load data local infile './datasets/versions.csv' into table versions fields terminated by ',' lines terminated by '\r\n' (game_id,plat_id);
+Query OK, 28 rows affected (0.01 sec)
+Records: 28  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+//creating inventory table
+mysql> create table inventory (inv_id int primary key auto_increment, store_id int not null, ver_id int not null, stock int not null, price decimal(5,2) not null);
+Query OK, 0 rows affected (0.04 sec)
+
+//populating inventory table using inventory.csv
+mysql> load data local infile './datasets/inventory.csv' into table inventory fields terminated by ',' lines terminated by '\r\n' (store_id,ver_id,stock,price);
+Query OK, 75 rows affected (0.01 sec)
+Records: 75  Deleted: 0  Skipped: 0  Warnings: 0
+
+
+
+//creating table sales
+mysql> create table sales (sale_id int primary key auto_increment, ver_id int not null, store_id int not null, quantity int not null, date date not null);
+Query OK, 0 rows affected (0.03 sec)
+
+//populating sales table using sales.csv
+mysql> load data local infile './datasets/sales.csv' into table sales fields terminated by ',' lines terminated by '\r\n' (ver_id,store_id,quantity,date);
+Query OK, 50 rows affected (0.01 sec)
+Records: 50  Deleted: 0  Skipped: 0  Warnings: 0
+
